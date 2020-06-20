@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  openresty1:
+    image: openresty/openresty:1.15.8.2-7-centos
+    ports:
+      - "10080:80"
+      - "10443:443"
+      - "10445:445"
+    depends_on:
+      - openresty2
+    volumes:
+      - ${BASE_PATH_DOCKER_COMPOSE}/nginx1_conf/:/etc/nginx/conf.d/
+      - ${BASE_PATH_DOCKER_COMPOSE}/certs/:/certs/
+    networks:
+      default:
+
+
+
+  openresty2:
+    image: openresty/openresty:1.15.8.2-7-centos
+    depends_on:
+      - httpbin-server
+    volumes:
+      - ${BASE_PATH_DOCKER_COMPOSE}/nginx2_conf/:/etc/nginx/conf.d/
+    networks:
+      default:
+
+
+
+  httpbin-server:
+    image: kennethreitz/httpbin
+    ports:
+      - "12346:80"
+    networks:
+      - default
